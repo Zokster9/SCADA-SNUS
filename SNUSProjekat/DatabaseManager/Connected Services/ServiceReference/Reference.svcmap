@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="dcb8c81b-b7f4-448d-ae89-19d8c16a9b0c" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="0f80e3a1-b01d-426b-b3a0-8259a3d53470" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
   <ClientOptions>
     <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
     <GenerateTaskBasedAsynchronousMethod>true</GenerateTaskBasedAsynchronousMethod>
@@ -19,13 +19,13 @@
     <ServiceContractMappings />
   </ClientOptions>
   <MetadataSources>
-    <MetadataSource Address="http://localhost:58413/Core.svc" Protocol="http" SourceId="1" />
+    <MetadataSource Address="http://localhost:58413/DatabaseManager.svc" Protocol="http" SourceId="1" />
   </MetadataSources>
   <Metadata>
-    <MetadataFile FileName="Core.xsd" MetadataType="Schema" ID="2d00848a-7521-459f-b103-622afbf692f1" SourceId="1" SourceUrl="http://localhost:58413/Core.svc?xsd=xsd0" />
-    <MetadataFile FileName="Core1.xsd" MetadataType="Schema" ID="73d392ed-9d5d-483a-a93b-d55dbf093baf" SourceId="1" SourceUrl="http://localhost:58413/Core.svc?xsd=xsd1" />
-    <MetadataFile FileName="Core.wsdl" MetadataType="Wsdl" ID="46afb5c6-a04b-459c-a14b-1894aaea0ec4" SourceId="1" SourceUrl="http://localhost:58413/Core.svc?wsdl" />
-    <MetadataFile FileName="Core.disco" MetadataType="Disco" ID="ea723393-44a5-499b-b472-d8b52891a8e0" SourceId="1" SourceUrl="http://localhost:58413/Core.svc?disco" />
+    <MetadataFile FileName="DatabaseManager.wsdl" MetadataType="Wsdl" ID="d82d2d7d-1254-4551-9b2a-0ada421d8fa4" SourceId="1" SourceUrl="http://localhost:58413/DatabaseManager.svc?wsdl" />
+    <MetadataFile FileName="DatabaseManager.xsd" MetadataType="Schema" ID="a02e1bb2-8ac3-4d8c-b21b-364d4b2cecdc" SourceId="1" SourceUrl="http://localhost:58413/DatabaseManager.svc?xsd=xsd1" />
+    <MetadataFile FileName="DatabaseManager1.xsd" MetadataType="Schema" ID="8e3e0df6-ea64-40ea-8a02-7c835c242595" SourceId="1" SourceUrl="http://localhost:58413/DatabaseManager.svc?xsd=xsd0" />
+    <MetadataFile FileName="DatabaseManager.disco" MetadataType="Disco" ID="f28cb711-3263-4482-ba15-eb5d3b501302" SourceId="1" SourceUrl="http://localhost:58413/DatabaseManager.svc?disco" />
   </Metadata>
   <Extensions>
     <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
