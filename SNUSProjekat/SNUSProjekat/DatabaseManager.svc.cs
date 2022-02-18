@@ -12,152 +12,55 @@ namespace SNUSProjekat
     {
         private static Dictionary<string, User> authenticatedUsers = 
             new Dictionary<string, User>();
-        private static Dictionary<string, Tag> tags = new Dictionary<string, Tag>();
 
-        private static readonly object locker = new object();
-
-        public DatabaseManager()
-        {
-            TagProcessing.LoadTags(tags);
-        }
+        private static readonly object userLocker = new object();
 
         public bool ChangeOutputValue(double output, string tagName)
         {
-            if (output < 0) return false;
-            Tag tag;
-            lock (locker)
-            {
-                try
-                {
-                    tag = tags[tagName];
-                }
-                catch (KeyNotFoundException)
-                {
-                    return false;
-                }
-                if (tag is DigitalOutput && !(tag is AnalogOutput))
-                {
-                    if (output != 0 && output != 1) return false;
-                    DigitalOutput digitalOutputTag = (DigitalOutput)tag;
-                    digitalOutputTag.OutputValue = output;
-                }
-                else
-                {
-                    AnalogOutput analogOutputTag = (AnalogOutput)tag;
-                    analogOutputTag.OutputValue = output;
-                }
-                TagProcessing.SaveTags(tags);
-                return true;
-            }
+            return TagProcessing.ChangeOutputValue(output, tagName);
         }
 
         public double GetOutputValue(string tagName)
         {
-            Tag tag;
-            lock (locker)
-            {
-                try
-                {
-                    tag = tags[tagName];
-                }
-                catch (KeyNotFoundException)
-                {
-                    return -1000;
-                }
-                if (tag is DigitalOutput)
-                {
-                    DigitalOutput digitalOutputTag = (DigitalOutput)tag;
-                    return digitalOutputTag.OutputValue;
-                }
-                return -1000;
-            }
+            return TagProcessing.GetOutputValue(tagName);
         }
 
         public bool ChangeScanState(string tagName)
         {
-            Tag tag;
-            lock (locker)
-            {
-                try
-                {
-                    tag = tags[tagName];
-                }
-                catch (KeyNotFoundException)
-                {
-                    return false;
-                }
-                if (tag is DigitalInput)
-                {
-                    DigitalInput digitalInputTag = (DigitalInput)tag;
-                    digitalInputTag.OnOffScan = !digitalInputTag.OnOffScan;
-                    TagProcessing.SaveTags(tags);
-                    return true;
-                }
-                return false;
-            }
+            return TagProcessing.ChangeScanState(tagName);
         }
 
         public bool AddDigitalInputTag(string tagName, string description, string driver, 
             string ioAddress, int scanTime, bool onOffScan)
         {
-            Tag tag = new DigitalInput(tagName, description, ioAddress, driver, scanTime, onOffScan);
-            lock (locker)
-            {
-                tags.Add(tagName, tag);
-                TagProcessing.SaveTags(tags);
-                return true;
-            }
+            return TagProcessing.AddDigitalInputTag(tagName, description, ioAddress, 
+                driver, scanTime, onOffScan);
         }
 
         public bool AddDigitalOutputTag(string tagName, string description,
             string ioAddress, double initialValue)
         {
-            Tag tag = new DigitalOutput(tagName, description, ioAddress, initialValue);
-            lock (locker)
-            {
-                tags.Add(tagName, tag);
-                TagProcessing.SaveTags(tags);
-                return true;
-            }
+            return TagProcessing.AddDigitalOutputTag(tagName, description, ioAddress, initialValue);
         }
 
         public bool AddAnalogInputTag(string tagName, string description, string driver, 
-            string ioAddress, int scanTime, bool onOffScan, double lowLimit, double highLimit, string units)
+            string ioAddress, int scanTime, bool onOffScan, double lowLimit, double highLimit, 
+            string units)
         {
-            Tag tag = new AnalogInput(tagName, description, ioAddress, driver, scanTime, 
+            return TagProcessing.AddAnalogInputTag(tagName, description, ioAddress, driver, scanTime,
                 onOffScan, lowLimit, highLimit, units);
-            lock (locker)
-            {
-                tags.Add(tagName, tag);
-                TagProcessing.SaveTags(tags);
-                return true;
-            }
         }
 
         public bool AddAnalogOutputTag(string tagName, string description, 
             string ioAddress, double initialValue, double lowLimit, double highLimit, string units)
         {
-            Tag tag = new AnalogOutput(tagName, description, ioAddress, initialValue, 
+            return TagProcessing.AddAnalogOutputTag(tagName, description, ioAddress, initialValue,
                 lowLimit, highLimit, units);
-            lock (locker)
-            {
-                tags.Add(tagName, tag);
-                TagProcessing.SaveTags(tags);
-                return true;
-            }
         }
 
         public bool RemoveTag(string tagName)
         {
-            lock (locker)
-            {
-                if (tags.Remove(tagName))
-                {
-                    TagProcessing.SaveTags(tags);
-                    return true;
-                }
-                return false;
-            }
+            return TagProcessing.RemoveTag(tagName);
         }
 
         public string Login(string username, string password)
@@ -170,7 +73,7 @@ namespace SNUSProjekat
                         ValidateEncryptedData(password, user.EncryptedPassword))
                     {
                         string token = GenerateToken(username);
-                        lock (locker)
+                        lock (userLocker)
                         {
                             authenticatedUsers.Add(token, user);
                         }
@@ -183,7 +86,7 @@ namespace SNUSProjekat
 
         public bool Logout(string token)
         {
-            lock (locker)
+            lock (userLocker)
             {
                 return authenticatedUsers.Remove(token);
             }
@@ -252,6 +155,11 @@ namespace SNUSProjekat
             crypto.GetBytes(randVal);
             string randStr = Convert.ToBase64String(randVal);
             return username + randStr;
+        }
+
+        public void LoadScadaConfig()
+        {
+            TagProcessing.LoadTags();
         }
     }
 }

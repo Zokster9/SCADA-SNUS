@@ -11,6 +11,8 @@ namespace SNUSProjekat
     public interface IDatabaseManager
     {
         [OperationContract]
+        void LoadScadaConfig();
+        [OperationContract]
         bool ChangeOutputValue(double output, string tagName);
         [OperationContract]
         double GetOutputValue(string tagName);

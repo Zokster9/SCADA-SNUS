@@ -6,6 +6,9 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SNUSProjekat", "SNUSProjekat\SNUSProjekat.csproj", "{4D4C9024-E5DA-4ABB-990D-A5DCD36C1388}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Trending", "Trending\Trending.csproj", "{86FE7CF5-B162-4AAE-B81B-C6D88604AF85}"
+	ProjectSection(ProjectDependencies) = postProject
+		{4D4C9024-E5DA-4ABB-990D-A5DCD36C1388} = {4D4C9024-E5DA-4ABB-990D-A5DCD36C1388}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AlarmDisplay", "AlarmDisplay\AlarmDisplay.csproj", "{0575D77F-52FB-44F7-9C68-A582D722F46C}"
 EndProject
@@ -17,8 +20,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DatabaseManager", "Database
 	ProjectSection(ProjectDependencies) = postProject
 		{4D4C9024-E5DA-4ABB-990D-A5DCD36C1388} = {4D4C9024-E5DA-4ABB-990D-A5DCD36C1388}
 	EndProjectSection
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Driver", "Driver\Driver.csproj", "{BC7E7020-CDFD-4489-A661-47C8E5F63F1E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -50,10 +51,6 @@ Global
 		{A227C55F-599B-44FC-8E00-93CBE82DC3DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A227C55F-599B-44FC-8E00-93CBE82DC3DF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A227C55F-599B-44FC-8E00-93CBE82DC3DF}.Release|Any CPU.Build.0 = Release|Any CPU
-		{BC7E7020-CDFD-4489-A661-47C8E5F63F1E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{BC7E7020-CDFD-4489-A661-47C8E5F63F1E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{BC7E7020-CDFD-4489-A661-47C8E5F63F1E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{BC7E7020-CDFD-4489-A661-47C8E5F63F1E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

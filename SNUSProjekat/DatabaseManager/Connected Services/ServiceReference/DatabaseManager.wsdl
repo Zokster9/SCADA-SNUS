@@ -24,6 +24,12 @@
   <wsdl:message name="IAuthentication_Logout_OutputMessage">
     <wsdl:part name="parameters" element="tns:LogoutResponse" />
   </wsdl:message>
+  <wsdl:message name="IDatabaseManager_LoadScadaConfig_InputMessage">
+    <wsdl:part name="parameters" element="tns:LoadScadaConfig" />
+  </wsdl:message>
+  <wsdl:message name="IDatabaseManager_LoadScadaConfig_OutputMessage">
+    <wsdl:part name="parameters" element="tns:LoadScadaConfigResponse" />
+  </wsdl:message>
   <wsdl:message name="IDatabaseManager_ChangeOutputValue_InputMessage">
     <wsdl:part name="parameters" element="tns:ChangeOutputValue" />
   </wsdl:message>
@@ -87,6 +93,10 @@
     </wsdl:operation>
   </wsdl:portType>
   <wsdl:portType name="IDatabaseManager">
+    <wsdl:operation name="LoadScadaConfig">
+      <wsdl:input wsaw:Action="http://tempuri.org/IDatabaseManager/LoadScadaConfig" message="tns:IDatabaseManager_LoadScadaConfig_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IDatabaseManager/LoadScadaConfigResponse" message="tns:IDatabaseManager_LoadScadaConfig_OutputMessage" />
+    </wsdl:operation>
     <wsdl:operation name="ChangeOutputValue">
       <wsdl:input wsaw:Action="http://tempuri.org/IDatabaseManager/ChangeOutputValue" message="tns:IDatabaseManager_ChangeOutputValue_InputMessage" />
       <wsdl:output wsaw:Action="http://tempuri.org/IDatabaseManager/ChangeOutputValueResponse" message="tns:IDatabaseManager_ChangeOutputValue_OutputMessage" />
@@ -152,6 +162,15 @@
   </wsdl:binding>
   <wsdl:binding name="BasicHttpBinding_IDatabaseManager" type="tns:IDatabaseManager">
     <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="LoadScadaConfig">
+      <soap:operation soapAction="http://tempuri.org/IDatabaseManager/LoadScadaConfig" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="ChangeOutputValue">
       <soap:operation soapAction="http://tempuri.org/IDatabaseManager/ChangeOutputValue" style="document" />
       <wsdl:input>

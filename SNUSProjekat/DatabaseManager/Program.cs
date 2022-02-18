@@ -15,6 +15,7 @@ namespace DatabaseManager
             ServiceReference.DatabaseManagerClient databaseManagerClient = 
                 new ServiceReference.DatabaseManagerClient();
             string token = "";
+            databaseManagerClient.LoadScadaConfig();
             while (true)
             {
                 Console.WriteLine("----- DATABASE MANAGER -----");
@@ -451,32 +452,6 @@ namespace DatabaseManager
                 }
             }
 
-            if (initialValue != "def")
-            {
-                try
-                {
-                    int initial = Convert.ToInt32(initialValue);
-                    if (lowLimit == "def")
-                    {
-                        if (initial != 0 && initial != 1)
-                        {
-                            return "INITIAL VALUE FOR DIGITAL OUTPUT MUST BE 0 OR 1";
-                        }
-                    }
-                    else
-                    {
-                        if (initial < 0)
-                        {
-                            return "INITIAL VALUE FOR ANALOG OUTPUT MUST BE A POSITIVE INTEGER";
-                        }
-                    }
-                }
-                catch (FormatException)
-                {
-                    return "INITIAL VALUE MUST BE A NUMBER";
-                }
-            }
-
             if (lowLimit != "def")
             {
                 try
@@ -511,6 +486,32 @@ namespace DatabaseManager
                 catch (FormatException)
                 {
                     return "HIGH LIMIT MUST BE A NUMBER";
+                }
+            }
+
+            if (initialValue != "def")
+            {
+                try
+                {
+                    int initial = Convert.ToInt32(initialValue);
+                    if (lowLimit == "def")
+                    {
+                        if (initial != 0 && initial != 1)
+                        {
+                            return "INITIAL VALUE FOR DIGITAL OUTPUT MUST BE 0 OR 1";
+                        }
+                    }
+                    else
+                    {
+                        if (initial < Convert.ToInt32(lowLimit) || initial > Convert.ToInt32(highLimit))
+                        {
+                            return "INITIAL VALUE FOR ANALOG OUTPUT MUST BE BETWEEN THE LOW LIMIT AND HIGH LIMIT";
+                        }
+                    }
+                }
+                catch (FormatException)
+                {
+                    return "INITIAL VALUE MUST BE A NUMBER";
                 }
             }
 

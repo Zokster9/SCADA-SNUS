@@ -90,6 +90,12 @@ namespace DatabaseManager.ServiceReference {
     [System.ServiceModel.ServiceContractAttribute(ConfigurationName="ServiceReference.IDatabaseManager")]
     public interface IDatabaseManager {
         
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IDatabaseManager/LoadScadaConfig", ReplyAction="http://tempuri.org/IDatabaseManager/LoadScadaConfigResponse")]
+        void LoadScadaConfig();
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IDatabaseManager/LoadScadaConfig", ReplyAction="http://tempuri.org/IDatabaseManager/LoadScadaConfigResponse")]
+        System.Threading.Tasks.Task LoadScadaConfigAsync();
+        
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IDatabaseManager/ChangeOutputValue", ReplyAction="http://tempuri.org/IDatabaseManager/ChangeOutputValueResponse")]
         bool ChangeOutputValue(double output, string tagName);
         
@@ -164,6 +170,14 @@ namespace DatabaseManager.ServiceReference {
         
         public DatabaseManagerClient(System.ServiceModel.Channels.Binding binding, System.ServiceModel.EndpointAddress remoteAddress) : 
                 base(binding, remoteAddress) {
+        }
+        
+        public void LoadScadaConfig() {
+            base.Channel.LoadScadaConfig();
+        }
+        
+        public System.Threading.Tasks.Task LoadScadaConfigAsync() {
+            return base.Channel.LoadScadaConfigAsync();
         }
         
         public bool ChangeOutputValue(double output, string tagName) {

@@ -44,6 +44,16 @@
       </xs:sequence>
     </xs:complexType>
   </xs:element>
+  <xs:element name="LoadScadaConfig">
+    <xs:complexType>
+      <xs:sequence />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="LoadScadaConfigResponse">
+    <xs:complexType>
+      <xs:sequence />
+    </xs:complexType>
+  </xs:element>
   <xs:element name="ChangeOutputValue">
     <xs:complexType>
       <xs:sequence>
