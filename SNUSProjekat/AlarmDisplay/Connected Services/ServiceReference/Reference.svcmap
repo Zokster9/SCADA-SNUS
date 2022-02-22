@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="25823df4-0bae-4248-ad92-c42c907fb3f3" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+  <ClientOptions>
+    <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
+    <GenerateTaskBasedAsynchronousMethod>true</GenerateTaskBasedAsynchronousMethod>
+    <EnableDataBinding>true</EnableDataBinding>
+    <ExcludedTypes />
+    <ImportXmlTypes>false</ImportXmlTypes>
+    <GenerateInternalTypes>false</GenerateInternalTypes>
+    <GenerateMessageContracts>false</GenerateMessageContracts>
+    <NamespaceMappings />
+    <CollectionMappings />
+    <GenerateSerializableTypes>true</GenerateSerializableTypes>
+    <Serializer>Auto</Serializer>
+    <UseSerializerForFaults>true</UseSerializerForFaults>
+    <ReferenceAllAssemblies>true</ReferenceAllAssemblies>
+    <ReferencedAssemblies />
+    <ReferencedDataContractTypes />
+    <ServiceContractMappings />
+  </ClientOptions>
+  <MetadataSources>
+    <MetadataSource Address="http://localhost:58413/AlarmDisplayService.svc" Protocol="http" SourceId="1" />
+  </MetadataSources>
+  <Metadata>
+    <MetadataFile FileName="AlarmDisplayService.xsd" MetadataType="Schema" ID="bd2fd0fc-48d5-4eb6-9ef8-67bc8ceaf040" SourceId="1" SourceUrl="http://localhost:58413/AlarmDisplayService.svc?xsd=xsd1" />
+    <MetadataFile FileName="AlarmDisplayService.disco" MetadataType="Disco" ID="f94371ff-edb9-48a7-bab6-43cca6be261d" SourceId="1" SourceUrl="http://localhost:58413/AlarmDisplayService.svc?disco" />
+    <MetadataFile FileName="AlarmDisplayService1.xsd" MetadataType="Schema" ID="1ff3d546-9573-4e65-8ba7-7b9c3d7a2e48" SourceId="1" SourceUrl="http://localhost:58413/AlarmDisplayService.svc?xsd=xsd0" />
+    <MetadataFile FileName="AlarmDisplayService.wsdl" MetadataType="Wsdl" ID="a23ab5a0-138f-4d20-b3f1-696e702727a3" SourceId="1" SourceUrl="http://localhost:58413/AlarmDisplayService.svc?wsdl" />
+  </Metadata>
+  <Extensions>
+    <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
+    <ExtensionFile FileName="configuration.svcinfo" Name="configuration.svcinfo" />
+  </Extensions>
+</ReferenceGroup>

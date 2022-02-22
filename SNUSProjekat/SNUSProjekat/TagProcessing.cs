@@ -12,13 +12,17 @@ namespace SNUSProjekat
     {
         public static Dictionary<string, Tag> Tags = new Dictionary<string, Tag>();
         public static readonly object Locker = new object();
-        public static readonly string FILE = "scadaConfig.xml";
+        public static readonly string SCADA_FILE = "scadaConfig.xml";
+        public static readonly string LOG_FILE = "alarmsLog.txt";
         public delegate void InputTagValueChangedDelegate(string tagName, double value);
         public static event InputTagValueChangedDelegate InputTagValueChanged;
-        public static Dictionary<string, Thread> inputTagThread = new Dictionary<string, Thread>();
+        public delegate void AlarmTriggeredDelegate(string tagName, string type, double limit, 
+            double value, DateTime triggerTime, int priority);
+        public static event AlarmTriggeredDelegate AlarmTriggered;
+        public static Dictionary<string, Thread> InputTagThread = new Dictionary<string, Thread>();
         public static void SaveTags() 
         {
-            using (var writer = new StreamWriter(FILE))
+            using (var writer = new StreamWriter(SCADA_FILE))
             {
                 var serializer = new XmlSerializer(typeof(List<Tag>));
                 serializer.Serialize(writer, Tags.Values.ToList());
@@ -45,16 +49,49 @@ namespace SNUSProjekat
                         if (inputTag is AnalogInput)
                         {
                             AnalogInput analogInput = (AnalogInput)inputTag;
-                            value = value < analogInput.LowLimit ? analogInput.LowLimit : value;
-                            value = value > analogInput.HighLimit ? analogInput.HighLimit : value;
+                            if (inputTag.Driver == "SIMULATION")
+                            {
+                                value = value < analogInput.LowLimit ? analogInput.LowLimit : 
+                                    value;
+                                value = value > analogInput.HighLimit ? analogInput.HighLimit : 
+                                    value;
+                            }
+                            else
+                            {
+                                Random r = new Random();
+                                if (value < analogInput.LowLimit || value > analogInput.HighLimit)
+                                {
+                                    value = r.NextDouble() * 
+                                        (analogInput.HighLimit - analogInput.LowLimit) + 
+                                        analogInput.LowLimit;
+                                }
+                            }
+
+                            AlarmCheck(analogInput, value);
                         }
                         else
                         {
-                            value = value < 50 ? 0 : 1;
+                            value = value < 51 ? 0 : 1;
                         }
                         if (value != outputValue)
                         {
                             outputValue = value;
+                            TagValue tagValue;
+                            if (inputTag is AnalogInput)
+                            {
+                                tagValue = new TagValue(inputTag.TagName, value,
+                                typeof(AnalogInput).FullName, DateTime.Now);
+                            }
+                            else
+                            {
+                                tagValue = new TagValue(inputTag.TagName, value,
+                                typeof(DigitalInput).FullName, DateTime.Now);
+                            }
+                            using (var tagValueDb = new TagValueContext())
+                            {
+                                tagValueDb.TagValues.Add(tagValue);
+                                tagValueDb.SaveChanges();
+                            }
                         }
                     }
 
@@ -65,16 +102,64 @@ namespace SNUSProjekat
             }
         }
 
+        private static void AlarmCheck(AnalogInput analogInput, double value)
+        {
+            using (var alarmDb = new TriggeredAlarmContext())
+            {
+                foreach (Alarm alarm in analogInput.Alarms)
+                {
+                    if (alarm.Type == "low" && value <= alarm.Limit)
+                    {
+                        TriggeredAlarm triggeredAlarm = new TriggeredAlarm(alarm.Type,
+                            alarm.Priority, alarm.Limit, alarm.TagName, DateTime.Now, value);
+                        alarmDb.TriggeredAlarms.Add(triggeredAlarm);
+                        alarmDb.SaveChanges();
+                        AlarmTriggered?.Invoke(triggeredAlarm.TagName, triggeredAlarm.Type,
+                            triggeredAlarm.Limit, triggeredAlarm.TriggerValue,
+                            triggeredAlarm.TriggerTime, triggeredAlarm.Priority);
+                        WriteAlarmToLog(triggeredAlarm);
+                    }
+                    else if (alarm.Type == "high" && value >= alarm.Limit)
+                    {
+                        TriggeredAlarm triggeredAlarm = new TriggeredAlarm(alarm.Type,
+                            alarm.Priority, alarm.Limit, alarm.TagName, DateTime.Now, value);
+                        alarmDb.TriggeredAlarms.Add(triggeredAlarm);
+                        alarmDb.SaveChanges();
+                        AlarmTriggered?.Invoke(triggeredAlarm.TagName, triggeredAlarm.Type,
+                            triggeredAlarm.Limit, triggeredAlarm.TriggerValue,
+                            triggeredAlarm.TriggerTime, triggeredAlarm.Priority);
+                        WriteAlarmToLog(triggeredAlarm);
+                    }
+                }
+            }
+        }
+
+        private static void WriteAlarmToLog(TriggeredAlarm triggeredAlarm)
+        {
+            lock (Locker)
+            {
+                using (StreamWriter sw = File.AppendText(LOG_FILE))
+                {
+                    sw.WriteLine($"Tag: {triggeredAlarm.TagName}; Type: {triggeredAlarm.Type}; " +
+                        $"Limit: {triggeredAlarm.Limit}; " +
+                        $"Trigger value: {triggeredAlarm.TriggerValue}; " +
+                        $"Trigger time: {triggeredAlarm.TriggerTime}");
+                }
+            }
+        }
+
         public static double GetDriverValue(DigitalInput inputTag)
         {
             return inputTag.Driver == "SIMULATION" ?
-                SimulationDriver.ReturnValue(inputTag.IOAdress) : -1000;
+                SimulationDriver.ReturnValue(inputTag.IOAdress) : 
+                RealTimeDriver.ReturnValue(inputTag.IOAdress);
         }
 
         internal static bool ChangeOutputValue(double output, string tagName)
         {
             if (output < 0) return false;
             Tag tag;
+            TagValue tagValue;
             lock (Locker)
             {
                 try
@@ -90,17 +175,88 @@ namespace SNUSProjekat
                     if (output != 0 && output != 1) return false;
                     DigitalOutput digitalOutputTag = (DigitalOutput)tag;
                     digitalOutputTag.OutputValue = output;
+                    tagValue = new TagValue(tagName, output, typeof(DigitalOutput).FullName, 
+                        DateTime.Now);
                 }
                 else
                 {
                     AnalogOutput analogOutputTag = (AnalogOutput)tag;
                     analogOutputTag.OutputValue = output;
+                    tagValue = new TagValue(tagName, output, typeof(AnalogOutput).FullName,
+                        DateTime.Now);
                 }
                 SaveTags();
+                using (var tagValueDb = new TagValueContext())
+                {
+                    tagValueDb.TagValues.Add(tagValue);
+                    tagValueDb.SaveChanges();
+                }
                 return true;
             }
         }
 
+        public static bool AddAlarm(string tagName, string type, int priority, double limit)
+        {
+            Tag tag;
+            lock (Locker)
+            {
+                try
+                {
+                    tag = Tags[tagName];
+                }
+                catch (KeyNotFoundException)
+                {
+                    return false;
+                }
+
+                if (tag is AnalogInput)
+                {
+                    AnalogInput analogInput = (AnalogInput)tag;
+                    analogInput.Alarms.Add(new Alarm(type, priority, limit, tagName));
+                    SaveTags();
+                    return true;
+                }
+            }            
+
+            return false;
+        }
+
+        public static bool RemoveAlarm(string tagName, string type, int priority, double limit)
+        {
+            Tag tag;
+            lock (Locker)
+            {
+                try
+                {
+                    tag = Tags[tagName];
+                }
+                catch (KeyNotFoundException)
+                {
+                    return false;
+                }
+
+                if (tag is AnalogInput)
+                {
+                    AnalogInput analogInput = (AnalogInput)tag;
+                    if (analogInput.Alarms.Count != 0)
+                    {
+                        foreach(Alarm alarm in analogInput.Alarms)
+                        {
+                            if (alarm.Limit == limit && alarm.Priority == priority && 
+                                alarm.Type == type)
+                            {
+                                analogInput.Alarms.Remove(alarm);
+                                SaveTags();
+                                break;
+                            }
+                        }
+                    }
+                    return true;
+                }
+            }
+
+            return false;
+        }
         internal static bool AddDigitalOutputTag(string tagName, string description, string ioAddress, 
             double initialValue)
         {
@@ -109,6 +265,13 @@ namespace SNUSProjekat
             {
                 Tags.Add(tagName, tag);
                 SaveTags();
+                TagValue tagValue = new TagValue(tagName, initialValue, typeof(DigitalOutput).FullName,
+                        DateTime.Now);
+                using (var tagValueDb = new TagValueContext())
+                {
+                    tagValueDb.TagValues.Add(tagValue);
+                    tagValueDb.SaveChanges();
+                }
                 return true;
             }
         }
@@ -126,7 +289,7 @@ namespace SNUSProjekat
                 {
                     RunDriver((AnalogInput)tag);
                 });
-                inputTagThread.Add(tag.TagName, t);
+                InputTagThread.Add(tag.TagName, t);
                 t.Start();
                 return true;
             }
@@ -138,6 +301,16 @@ namespace SNUSProjekat
             {
                 if (Tags.Remove(tagName))
                 {
+                    try
+                    {
+                        Thread t = InputTagThread[tagName];
+                        t.Abort();
+                        InputTagThread.Remove(tagName);
+                    }
+                    catch
+                    {
+
+                    }
                     SaveTags();
                     return true;
                 }
@@ -154,6 +327,13 @@ namespace SNUSProjekat
             {
                 Tags.Add(tagName, tag);
                 SaveTags();
+                TagValue tagValue = new TagValue(tagName, initialValue, typeof(AnalogOutput).FullName,
+                        DateTime.Now);
+                using (var tagValueDb = new TagValueContext())
+                {
+                    tagValueDb.TagValues.Add(tagValue);
+                    tagValueDb.SaveChanges();
+                }
                 return true;
             }
         }
@@ -171,7 +351,7 @@ namespace SNUSProjekat
                 {
                     RunDriver((DigitalInput)tag);
                 });
-                inputTagThread.Add(tag.TagName, t);
+                InputTagThread.Add(tag.TagName, t);
                 t.Start();
                 return true;
             }
@@ -225,13 +405,13 @@ namespace SNUSProjekat
 
         public static void LoadTags()
         {
-            if (!File.Exists(FILE))
+            if (!File.Exists(SCADA_FILE))
             {
                 Console.WriteLine("FILE DOES NOT EXIST");
             }
             else
             {
-                using (var reader = new StreamReader(FILE))
+                using (var reader = new StreamReader(SCADA_FILE))
                 {
                     XmlSerializer serializer = new XmlSerializer(typeof(List<Tag>));
                     var tagsList = (List<Tag>)serializer.Deserialize(reader);
@@ -254,7 +434,7 @@ namespace SNUSProjekat
                     {
                         RunDriver((DigitalInput)keyValuePair.Value);
                     });
-                    inputTagThread.Add(keyValuePair.Value.TagName, t);
+                    InputTagThread.Add(keyValuePair.Value.TagName, t);
                 }
             }
 
@@ -263,7 +443,7 @@ namespace SNUSProjekat
 
         private static void RunThreads()
         {
-            foreach (KeyValuePair<string, Thread> keyValuePair in inputTagThread)
+            foreach (KeyValuePair<string, Thread> keyValuePair in InputTagThread)
             {
                 keyValuePair.Value.Start();
             }
