@@ -25,7 +25,8 @@ namespace SNUSProjekat
 
         public bool Init(string id, string address, byte[] signature, string message)
         {
-            if (RealTimeDriver.values.ContainsKey(address) || RealTimeDriverIds.Contains(id))
+            if (RealTimeDriver.values.ContainsKey(address) || RealTimeDriverIds.Contains(id) 
+                || id == "")
             {
                 return false;
             }
@@ -34,8 +35,8 @@ namespace SNUSProjekat
                 lock (locker)
                 {
                     RealTimeDriver.values[address] = 0;
+                    RealTimeDriverIds.Add(id);
                 }
-                RealTimeDriverIds.Add(id);
                 return true;
             }
             return false;

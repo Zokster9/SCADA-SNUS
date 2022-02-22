@@ -9,29 +9,25 @@ namespace DatabaseManager
 {
     class Program
     {
+        static AuthenticationClient authenticationClient =
+                new AuthenticationClient();
+        static DatabaseManagerClient databaseManagerClient =
+            new DatabaseManagerClient();
         static void Main(string[] args)
         {
-            AuthenticationClient authenticationClient = 
-                new AuthenticationClient();
-            DatabaseManagerClient databaseManagerClient = 
-                new DatabaseManagerClient();
-            string token = "";
             databaseManagerClient.LoadScadaConfig();
+            MainScreen();
+        }
+
+        private static void MainScreen()
+        {
             while (true)
             {
-                Console.WriteLine("----- DATABASE MANAGER -----");
+                Console.WriteLine("----- LOGIN SCREEN -----");
                 Console.WriteLine("CHOOSE AN OPTION:");
                 Console.WriteLine("\t1. Login");
-                Console.WriteLine("\t2. Add tag");
-                Console.WriteLine("\t3. Remove tag");
-                Console.WriteLine("\t4. Add alarm");
-                Console.WriteLine("\t5. Remove alarm");
-                Console.WriteLine("\t6. Turn scan on/off");
-                Console.WriteLine("\t7. Change output value");
-                Console.WriteLine("\t8. Get output value");
-                Console.WriteLine("\t9. Register user");
-                Console.WriteLine("\t10. Logout");
-                Console.WriteLine("\t11. Exit");
+                Console.WriteLine("\t2. Register user");
+                Console.WriteLine("\t3. Exit");
                 Console.Write("ENTER AN OPTION: ");
                 string option = Console.ReadLine();
                 try
@@ -41,48 +37,81 @@ namespace DatabaseManager
                     switch (optionValue)
                     {
                         case 1:
-                            token = LoginScreen(authenticationClient);
+                            string token = LoginScreen();
+                            DatabaseManagerScreen(token);
                             break;
                         case 2:
-                            AddTagScreen(databaseManagerClient);
+                            RegisterScreen();
                             break;
                         case 3:
-                            RemoveTagScreen(databaseManagerClient);
-                            break;
-                        case 4:
-                            AddAlarm(databaseManagerClient);
-                            break;
-                        case 5:
-                            RemoveAlarm(databaseManagerClient);
-                            break;
-                        case 6:
-                            TurnScanOnOffScreen(databaseManagerClient);
-                            break;
-                        case 7:
-                            ChangeOutputValueScreen(databaseManagerClient);
-                            break;
-                        case 8:
-                            GetOutputValueScreen(databaseManagerClient);
-                            break;
-                        case 9:
-                            RegisterScreen(authenticationClient);
-                            break;
-                        case 10:
-                            Logout(token, authenticationClient);
-                            break;
-                        case 11:
                             Environment.Exit(0);
                             break;
                     }
                 }
-                catch (FormatException)
+                catch
                 {
                     Console.WriteLine("WRONG INPUT");
                 }
             }
         }
 
-        private static void RemoveAlarm(DatabaseManagerClient databaseManagerClient)
+        private static void DatabaseManagerScreen(string token)
+        {
+            while (true)
+            {
+                Console.WriteLine("----- DATABASE MANAGER -----");
+                Console.WriteLine("CHOOSE AN OPTION:");
+                Console.WriteLine("\t1. Add tag");
+                Console.WriteLine("\t2. Remove tag");
+                Console.WriteLine("\t3. Add alarm");
+                Console.WriteLine("\t4. Remove alarm");
+                Console.WriteLine("\t5. Turn scan on/off");
+                Console.WriteLine("\t6. Change output value");
+                Console.WriteLine("\t7. Get output value");
+                Console.WriteLine("\t8. Logout");
+                Console.Write("ENTER AN OPTION: ");
+                string option = Console.ReadLine();
+                try
+                {
+                    int optionValue = Convert.ToInt32(option);
+
+                    switch (optionValue)
+                    {
+                        case 1:
+                            AddTagScreen();
+                            break;
+                        case 2:
+                            RemoveTagScreen();
+                            break;
+                        case 3:
+                            AddAlarm();
+                            break;
+                        case 4:
+                            RemoveAlarm();
+                            break;
+                        case 5:
+                            TurnScanOnOffScreen();
+                            break;
+                        case 6:
+                            ChangeOutputValueScreen();
+                            break;
+                        case 7:
+                            GetOutputValueScreen();
+                            break;
+                        case 8:
+                            Logout(token);
+                            MainScreen();
+                            break;
+                    }
+                }
+                catch
+                {
+                    Console.WriteLine("WRONG INPUT");
+                }
+            }
+        }
+
+        private static void RemoveAlarm()
         {
             Console.WriteLine("-------------------");
             Console.WriteLine("----- REMOVE ALARM SCREEN -----");
@@ -97,8 +126,8 @@ namespace DatabaseManager
             string response = CheckAlarmParameters(type, priority, limit);
             if (response == "")
             {
-                if (databaseManagerClient.RemoveAlarm(tagName, type.ToLower(), Convert.ToInt32(priority),
-                    Convert.ToDouble(limit)))
+                if (databaseManagerClient.RemoveAlarm(tagName, type.ToLower(), 
+                    Convert.ToInt32(priority), Convert.ToDouble(limit)))
                 {
                     Console.WriteLine("SUCCESSFULLY REMOVED ALARM");
                 }
@@ -113,7 +142,7 @@ namespace DatabaseManager
             }
         }
 
-        private static void AddAlarm(DatabaseManagerClient databaseManagerClient)
+        private static void AddAlarm()
         {
             Console.WriteLine("-------------------");
             Console.WriteLine("----- ADD ALARM SCREEN -----");
@@ -128,8 +157,8 @@ namespace DatabaseManager
             string response = CheckAlarmParameters(type, priority, limit);
             if (response == "")
             {
-                if (databaseManagerClient.AddAlarm(tagName, type.ToLower(), Convert.ToInt32(priority), 
-                    Convert.ToDouble(limit)))
+                if (databaseManagerClient.AddAlarm(tagName, type.ToLower(), 
+                    Convert.ToInt32(priority), Convert.ToDouble(limit)))
                 {
                     Console.WriteLine("SUCCESSFULLY ADDED ALARM");
                 }
@@ -158,7 +187,7 @@ namespace DatabaseManager
                     return "PRIORITY MUST BE 1, 2, OR 3";
                 }
             }
-            catch (FormatException)
+            catch
             {
                 return "PRIORITY MUST BE A NUMBER";
             }
@@ -166,14 +195,14 @@ namespace DatabaseManager
             {
                 double limitValue = Convert.ToDouble(limit);
             }
-            catch (FormatException)
+            catch
             {
                 return "LIMIT MUST BE A NUMBER";
             }
             return "";
         }
 
-        private static string LoginScreen(AuthenticationClient authenticationClient)
+        private static string LoginScreen()
         {
             while (true)
             {
@@ -196,7 +225,7 @@ namespace DatabaseManager
             }
         }
 
-        private static void AddTagScreen(DatabaseManagerClient databaseManagerClient)
+        private static void AddTagScreen()
         {
             bool exit = false;
             while (true)
@@ -217,16 +246,16 @@ namespace DatabaseManager
                     switch (optionValue)
                     {
                         case 1:
-                            AddDigitalInputTag(databaseManagerClient);
+                            AddDigitalInputTag();
                             break;
                         case 2:
-                            AddDigitalOutputTag(databaseManagerClient);
+                            AddDigitalOutputTag();
                             break;
                         case 3:
-                            AddAnalogInputTag(databaseManagerClient);
+                            AddAnalogInputTag();
                             break;
                         case 4:
-                            AddAnalogOutputTag(databaseManagerClient);
+                            AddAnalogOutputTag();
                             break;
                         case 5:
                             exit = true;
@@ -234,14 +263,14 @@ namespace DatabaseManager
                     }
                     if (exit) break;
                 }
-                catch (FormatException)
+                catch
                 {
                     Console.WriteLine("WRONG INPUT");
                 }
             }
         }
 
-        private static void RemoveTagScreen(DatabaseManagerClient databaseManagerClient)
+        private static void RemoveTagScreen()
         {
             Console.WriteLine("-------------------");
             Console.WriteLine("----- REMOVE TAG SCREEN -----");
@@ -257,7 +286,7 @@ namespace DatabaseManager
             }
         }
 
-        private static void TurnScanOnOffScreen(DatabaseManagerClient databaseManagerClient)
+        private static void TurnScanOnOffScreen()
         {
             Console.WriteLine("-------------------");
             Console.WriteLine("----- TURN SCAN ON/OFF SCREEN -----");
@@ -273,7 +302,7 @@ namespace DatabaseManager
             }
         }
 
-        private static void ChangeOutputValueScreen(DatabaseManagerClient databaseManagerClient)
+        private static void ChangeOutputValueScreen()
         {
             while (true)
             {
@@ -288,7 +317,7 @@ namespace DatabaseManager
                 {
                     value = Convert.ToDouble(newValue);
                 }
-                catch (FormatException)
+                catch
                 {
                     Console.WriteLine("ENTER A NUMBER!");
                 }
@@ -304,7 +333,7 @@ namespace DatabaseManager
             }
         }
 
-        private static void GetOutputValueScreen(DatabaseManagerClient databaseManagerClient)
+        private static void GetOutputValueScreen()
         {
             Console.WriteLine("-------------------");
             Console.WriteLine("----- GET OUTPUT VALUE SCREEN -----");
@@ -321,7 +350,7 @@ namespace DatabaseManager
             }
         }
 
-        private static void RegisterScreen(AuthenticationClient authenticationClient)
+        private static void RegisterScreen()
         {
             Console.WriteLine("-------------------");
             Console.WriteLine("----- REGISTER SCREEN -----");
@@ -339,7 +368,7 @@ namespace DatabaseManager
             }
         }
 
-        private static void Logout(string token, AuthenticationClient authenticationClient)
+        private static void Logout(string token)
         {
             if (authenticationClient.Logout(token))
             {
@@ -351,7 +380,7 @@ namespace DatabaseManager
             }
         }
 
-        private static void AddDigitalInputTag(DatabaseManagerClient databaseManagerClient)
+        private static void AddDigitalInputTag()
         {
             Console.WriteLine("-------------------");
             Console.WriteLine("----- ADD DIGITAL INPUT TAG SCREEN -----");
@@ -387,7 +416,7 @@ namespace DatabaseManager
             }
         }
 
-        private static void AddDigitalOutputTag(DatabaseManagerClient databaseManagerClient)
+        private static void AddDigitalOutputTag()
         {
             Console.WriteLine("-------------------");
             Console.WriteLine("----- ADD DIGITAL OUTPUT TAG SCREEN -----");
@@ -420,7 +449,7 @@ namespace DatabaseManager
             }
         }
 
-        private static void AddAnalogInputTag(DatabaseManagerClient databaseManagerClient)
+        private static void AddAnalogInputTag()
         {
             Console.WriteLine("-------------------");
             Console.WriteLine("----- ADD ANALOG INPUT TAG SCREEN -----");
@@ -463,7 +492,7 @@ namespace DatabaseManager
             }
         }
 
-        private static void AddAnalogOutputTag(DatabaseManagerClient databaseManagerClient)
+        private static void AddAnalogOutputTag()
         {
             Console.WriteLine("-------------------");
             Console.WriteLine("----- ADD ANALOG OUTPUT TAG SCREEN -----");
@@ -537,7 +566,7 @@ namespace DatabaseManager
                         return "SCAN TIME MUST BE A POSITIVE INTEGER";
                     }
                 }
-                catch (FormatException)
+                catch
                 {
                     return "SCAN TIME MUST BE A NUMBER";
                 }
@@ -549,7 +578,7 @@ namespace DatabaseManager
                 {
                     bool onOffScanValue = Convert.ToBoolean(onOffScan);
                 }
-                catch (FormatException)
+                catch
                 {
                     return "ON/OFF SCAN VALUE MUST BE A BOOLEAN";
                 }
@@ -565,7 +594,7 @@ namespace DatabaseManager
                         return "LOW LIMIT MUST BE A POSITIVE INTEGER";
                     }
                 }
-                catch (FormatException)
+                catch
                 {
                     return "LOW LIMIT MUST BE A NUMBER";
                 }
@@ -586,7 +615,7 @@ namespace DatabaseManager
                         return "HIGH LIMIT MUST BE GREATER THAN LOW LIMIT";
                     }
                 }
-                catch (FormatException)
+                catch
                 {
                     return "HIGH LIMIT MUST BE A NUMBER";
                 }
@@ -612,7 +641,7 @@ namespace DatabaseManager
                         }
                     }
                 }
-                catch (FormatException)
+                catch
                 {
                     return "INITIAL VALUE MUST BE A NUMBER";
                 }
@@ -625,7 +654,7 @@ namespace DatabaseManager
                     int unitsValue = Convert.ToInt32(units);
                     return "UNITS MUST BE A STRING";
                 }
-                catch (FormatException)
+                catch
                 {
                     return "";
                 }

@@ -45,7 +45,6 @@ namespace RTU
             string message = id + address + lowLimit + highLimit;
             var signature = SignMessage(message);
 
-            // PROVERAAA
             if (!realTimeUnitClient.Init(id, address, signature, message))
             {
                 Console.WriteLine("SOMETHING WENT WRONG!");

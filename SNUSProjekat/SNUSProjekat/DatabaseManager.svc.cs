@@ -94,6 +94,7 @@ namespace SNUSProjekat
 
         public bool Registration(string username, string password)
         {
+            if (username == "" || password == "") return false;
             string encryptedPassword = EncryptData(password);
             User user = new User(username, encryptedPassword);
             using (var db = new UsersContext())

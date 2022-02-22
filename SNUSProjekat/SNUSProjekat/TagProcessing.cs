@@ -39,8 +39,7 @@ namespace SNUSProjekat
             }
             while (true)
             {
-                bool isScanOn = inputTag.OnOffScan;
-                if (isScanOn)
+                if (inputTag.OnOffScan)
                 {
                     double value = GetDriverValue(inputTag);
 
@@ -166,7 +165,7 @@ namespace SNUSProjekat
                 {
                     tag = Tags[tagName];
                 }
-                catch (KeyNotFoundException)
+                catch
                 {
                     return false;
                 }
@@ -204,7 +203,7 @@ namespace SNUSProjekat
                 {
                     tag = Tags[tagName];
                 }
-                catch (KeyNotFoundException)
+                catch
                 {
                     return false;
                 }
@@ -212,7 +211,7 @@ namespace SNUSProjekat
                 if (tag is AnalogInput)
                 {
                     AnalogInput analogInput = (AnalogInput)tag;
-                    analogInput.Alarms.Add(new Alarm(type, priority, limit, tagName));
+                    analogInput.Alarms.Add(new Alarm(type.ToLower(), priority, limit, tagName));
                     SaveTags();
                     return true;
                 }
@@ -230,7 +229,7 @@ namespace SNUSProjekat
                 {
                     tag = Tags[tagName];
                 }
-                catch (KeyNotFoundException)
+                catch
                 {
                     return false;
                 }
@@ -260,6 +259,7 @@ namespace SNUSProjekat
         internal static bool AddDigitalOutputTag(string tagName, string description, string ioAddress, 
             double initialValue)
         {
+            if (Tags.ContainsKey(tagName)) return false;
             Tag tag = new DigitalOutput(tagName, description, ioAddress, initialValue);
             lock (Locker)
             {
@@ -279,6 +279,7 @@ namespace SNUSProjekat
         internal static bool AddAnalogInputTag(string tagName, string description, string ioAddress, 
             string driver, int scanTime, bool onOffScan, double lowLimit, double highLimit, string units)
         {
+            if (Tags.ContainsKey(tagName)) return false;
             Tag tag = new AnalogInput(tagName, description, ioAddress, driver.ToUpper(), scanTime,
                 onOffScan, lowLimit, highLimit, units);
             lock (Locker)
@@ -297,6 +298,7 @@ namespace SNUSProjekat
 
         internal static bool RemoveTag(string tagName)
         {
+            if (tagName == "") return false;
             lock (Locker)
             {
                 if (Tags.Remove(tagName))
@@ -321,6 +323,7 @@ namespace SNUSProjekat
         internal static bool AddAnalogOutputTag(string tagName, string description, string ioAddress, 
             double initialValue, double lowLimit, double highLimit, string units)
         {
+            if (Tags.ContainsKey(tagName)) return false;
             Tag tag = new AnalogOutput(tagName, description, ioAddress, initialValue,
                 lowLimit, highLimit, units);
             lock (Locker)
@@ -341,6 +344,7 @@ namespace SNUSProjekat
         internal static bool AddDigitalInputTag(string tagName, string description, string ioAddress, 
             string driver, int scanTime, bool onOffScan)
         {
+            if (Tags.ContainsKey(tagName)) return false;
             Tag tag = new DigitalInput(tagName, description, ioAddress, driver.ToUpper(), 
                 scanTime, onOffScan);
             lock (Locker)
@@ -366,7 +370,7 @@ namespace SNUSProjekat
                 {
                     tag = Tags[tagName];
                 }
-                catch (KeyNotFoundException)
+                catch
                 {
                     return false;
                 }
@@ -390,7 +394,7 @@ namespace SNUSProjekat
                 {
                     tag = Tags[tagName];
                 }
-                catch (KeyNotFoundException)
+                catch
                 {
                     return -1000;
                 }
@@ -405,6 +409,7 @@ namespace SNUSProjekat
 
         public static void LoadTags()
         {
+            if (Tags.Count != 0) return;
             if (!File.Exists(SCADA_FILE))
             {
                 Console.WriteLine("FILE DOES NOT EXIST");
@@ -426,6 +431,7 @@ namespace SNUSProjekat
 
         private static void AddThreads()
         {
+            if (InputTagThread.Count != 0) return;
             foreach(KeyValuePair<string, Tag> keyValuePair in Tags)
             {
                 if (keyValuePair.Value is DigitalInput)
