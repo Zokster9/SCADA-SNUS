@@ -31,5 +31,10 @@ namespace SNUSProjekat
                 double lowLimit, double highLimit, string units);
         [OperationContract]
         bool RemoveTag(string tagName);
+
+        [OperationContract]
+        bool AddAlarm(string tagName, string type, int priority, double limit);
+        [OperationContract]
+        bool RemoveAlarm(string tagName, string type, int priority, double limit);
     }
 }

@@ -143,6 +143,18 @@ namespace DatabaseManager.ServiceReference {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IDatabaseManager/RemoveTag", ReplyAction="http://tempuri.org/IDatabaseManager/RemoveTagResponse")]
         System.Threading.Tasks.Task<bool> RemoveTagAsync(string tagName);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IDatabaseManager/AddAlarm", ReplyAction="http://tempuri.org/IDatabaseManager/AddAlarmResponse")]
+        bool AddAlarm(string tagName, string type, int priority, double limit);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IDatabaseManager/AddAlarm", ReplyAction="http://tempuri.org/IDatabaseManager/AddAlarmResponse")]
+        System.Threading.Tasks.Task<bool> AddAlarmAsync(string tagName, string type, int priority, double limit);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IDatabaseManager/RemoveAlarm", ReplyAction="http://tempuri.org/IDatabaseManager/RemoveAlarmResponse")]
+        bool RemoveAlarm(string tagName, string type, int priority, double limit);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IDatabaseManager/RemoveAlarm", ReplyAction="http://tempuri.org/IDatabaseManager/RemoveAlarmResponse")]
+        System.Threading.Tasks.Task<bool> RemoveAlarmAsync(string tagName, string type, int priority, double limit);
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
@@ -242,6 +254,22 @@ namespace DatabaseManager.ServiceReference {
         
         public System.Threading.Tasks.Task<bool> RemoveTagAsync(string tagName) {
             return base.Channel.RemoveTagAsync(tagName);
+        }
+        
+        public bool AddAlarm(string tagName, string type, int priority, double limit) {
+            return base.Channel.AddAlarm(tagName, type, priority, limit);
+        }
+        
+        public System.Threading.Tasks.Task<bool> AddAlarmAsync(string tagName, string type, int priority, double limit) {
+            return base.Channel.AddAlarmAsync(tagName, type, priority, limit);
+        }
+        
+        public bool RemoveAlarm(string tagName, string type, int priority, double limit) {
+            return base.Channel.RemoveAlarm(tagName, type, priority, limit);
+        }
+        
+        public System.Threading.Tasks.Task<bool> RemoveAlarmAsync(string tagName, string type, int priority, double limit) {
+            return base.Channel.RemoveAlarmAsync(tagName, type, priority, limit);
         }
     }
 }

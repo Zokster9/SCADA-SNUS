@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DatabaseManager.ServiceReference;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,10 +11,10 @@ namespace DatabaseManager
     {
         static void Main(string[] args)
         {
-            ServiceReference.AuthenticationClient authenticationClient = 
-                new ServiceReference.AuthenticationClient();
-            ServiceReference.DatabaseManagerClient databaseManagerClient = 
-                new ServiceReference.DatabaseManagerClient();
+            AuthenticationClient authenticationClient = 
+                new AuthenticationClient();
+            DatabaseManagerClient databaseManagerClient = 
+                new DatabaseManagerClient();
             string token = "";
             databaseManagerClient.LoadScadaConfig();
             while (true)
@@ -23,12 +24,14 @@ namespace DatabaseManager
                 Console.WriteLine("\t1. Login");
                 Console.WriteLine("\t2. Add tag");
                 Console.WriteLine("\t3. Remove tag");
-                Console.WriteLine("\t4. Turn scan on/off");
-                Console.WriteLine("\t5. Change output value");
-                Console.WriteLine("\t6. Get output value");
-                Console.WriteLine("\t7. Register user");
-                Console.WriteLine("\t8. Logout");
-                Console.WriteLine("\t9. Exit");
+                Console.WriteLine("\t4. Add alarm");
+                Console.WriteLine("\t5. Remove alarm");
+                Console.WriteLine("\t6. Turn scan on/off");
+                Console.WriteLine("\t7. Change output value");
+                Console.WriteLine("\t8. Get output value");
+                Console.WriteLine("\t9. Register user");
+                Console.WriteLine("\t10. Logout");
+                Console.WriteLine("\t11. Exit");
                 Console.Write("ENTER AN OPTION: ");
                 string option = Console.ReadLine();
                 try
@@ -47,21 +50,27 @@ namespace DatabaseManager
                             RemoveTagScreen(databaseManagerClient);
                             break;
                         case 4:
-                            TurnScanOnOffScreen(databaseManagerClient);
+                            AddAlarm(databaseManagerClient);
                             break;
                         case 5:
-                            ChangeOutputValueScreen(databaseManagerClient);
+                            RemoveAlarm(databaseManagerClient);
                             break;
                         case 6:
-                            GetOutputValueScreen(databaseManagerClient);
+                            TurnScanOnOffScreen(databaseManagerClient);
                             break;
                         case 7:
-                            RegisterScreen(authenticationClient);
+                            ChangeOutputValueScreen(databaseManagerClient);
                             break;
                         case 8:
-                            Logout(token, authenticationClient);
+                            GetOutputValueScreen(databaseManagerClient);
                             break;
                         case 9:
+                            RegisterScreen(authenticationClient);
+                            break;
+                        case 10:
+                            Logout(token, authenticationClient);
+                            break;
+                        case 11:
                             Environment.Exit(0);
                             break;
                     }
@@ -73,7 +82,98 @@ namespace DatabaseManager
             }
         }
 
-        private static string LoginScreen(ServiceReference.AuthenticationClient authenticationClient)
+        private static void RemoveAlarm(DatabaseManagerClient databaseManagerClient)
+        {
+            Console.WriteLine("-------------------");
+            Console.WriteLine("----- REMOVE ALARM SCREEN -----");
+            Console.Write("Tag name: ");
+            string tagName = Console.ReadLine();
+            Console.Write("Type: ");
+            string type = Console.ReadLine();
+            Console.Write("Priority: ");
+            string priority = Console.ReadLine();
+            Console.Write("Limit: ");
+            string limit = Console.ReadLine();
+            string response = CheckAlarmParameters(type, priority, limit);
+            if (response == "")
+            {
+                if (databaseManagerClient.RemoveAlarm(tagName, type.ToLower(), Convert.ToInt32(priority),
+                    Convert.ToDouble(limit)))
+                {
+                    Console.WriteLine("SUCCESSFULLY REMOVED ALARM");
+                }
+                else
+                {
+                    Console.WriteLine("SOMETHING WENT WRONG!");
+                }
+            }
+            else
+            {
+                Console.WriteLine(response);
+            }
+        }
+
+        private static void AddAlarm(DatabaseManagerClient databaseManagerClient)
+        {
+            Console.WriteLine("-------------------");
+            Console.WriteLine("----- ADD ALARM SCREEN -----");
+            Console.Write("Tag name: ");
+            string tagName = Console.ReadLine();
+            Console.Write("Type: ");
+            string type = Console.ReadLine();
+            Console.Write("Priority: ");
+            string priority = Console.ReadLine();
+            Console.Write("Limit: ");
+            string limit = Console.ReadLine();
+            string response = CheckAlarmParameters(type, priority, limit);
+            if (response == "")
+            {
+                if (databaseManagerClient.AddAlarm(tagName, type.ToLower(), Convert.ToInt32(priority), 
+                    Convert.ToDouble(limit)))
+                {
+                    Console.WriteLine("SUCCESSFULLY ADDED ALARM");
+                }
+                else
+                {
+                    Console.WriteLine("SOMETHING WENT WRONG!");
+                }
+            }
+            else
+            {
+                Console.WriteLine(response);
+            }
+        }
+
+        private static string CheckAlarmParameters(string type, string priority, string limit)
+        {
+            if (type != "low" && type != "high")
+            {
+                return "TYPE MUST BE LOW OR HIGH!";
+            }
+            try
+            {
+                int priorityValue = Convert.ToInt32(priority);
+                if (priorityValue != 1 && priorityValue != 2 && priorityValue != 3)
+                {
+                    return "PRIORITY MUST BE 1, 2, OR 3";
+                }
+            }
+            catch (FormatException)
+            {
+                return "PRIORITY MUST BE A NUMBER";
+            }
+            try
+            {
+                double limitValue = Convert.ToDouble(limit);
+            }
+            catch (FormatException)
+            {
+                return "LIMIT MUST BE A NUMBER";
+            }
+            return "";
+        }
+
+        private static string LoginScreen(AuthenticationClient authenticationClient)
         {
             while (true)
             {
@@ -96,7 +196,7 @@ namespace DatabaseManager
             }
         }
 
-        private static void AddTagScreen(ServiceReference.DatabaseManagerClient databaseManagerClient)
+        private static void AddTagScreen(DatabaseManagerClient databaseManagerClient)
         {
             bool exit = false;
             while (true)
@@ -141,7 +241,7 @@ namespace DatabaseManager
             }
         }
 
-        private static void RemoveTagScreen(ServiceReference.DatabaseManagerClient databaseManagerClient)
+        private static void RemoveTagScreen(DatabaseManagerClient databaseManagerClient)
         {
             Console.WriteLine("-------------------");
             Console.WriteLine("----- REMOVE TAG SCREEN -----");
@@ -157,7 +257,7 @@ namespace DatabaseManager
             }
         }
 
-        private static void TurnScanOnOffScreen(ServiceReference.DatabaseManagerClient databaseManagerClient)
+        private static void TurnScanOnOffScreen(DatabaseManagerClient databaseManagerClient)
         {
             Console.WriteLine("-------------------");
             Console.WriteLine("----- TURN SCAN ON/OFF SCREEN -----");
@@ -173,7 +273,7 @@ namespace DatabaseManager
             }
         }
 
-        private static void ChangeOutputValueScreen(ServiceReference.DatabaseManagerClient databaseManagerClient)
+        private static void ChangeOutputValueScreen(DatabaseManagerClient databaseManagerClient)
         {
             while (true)
             {
@@ -204,7 +304,7 @@ namespace DatabaseManager
             }
         }
 
-        private static void GetOutputValueScreen(ServiceReference.DatabaseManagerClient databaseManagerClient)
+        private static void GetOutputValueScreen(DatabaseManagerClient databaseManagerClient)
         {
             Console.WriteLine("-------------------");
             Console.WriteLine("----- GET OUTPUT VALUE SCREEN -----");
@@ -221,7 +321,7 @@ namespace DatabaseManager
             }
         }
 
-        private static void RegisterScreen(ServiceReference.AuthenticationClient authenticationClient)
+        private static void RegisterScreen(AuthenticationClient authenticationClient)
         {
             Console.WriteLine("-------------------");
             Console.WriteLine("----- REGISTER SCREEN -----");
@@ -239,7 +339,7 @@ namespace DatabaseManager
             }
         }
 
-        private static void Logout(string token, ServiceReference.AuthenticationClient authenticationClient)
+        private static void Logout(string token, AuthenticationClient authenticationClient)
         {
             if (authenticationClient.Logout(token))
             {
@@ -251,7 +351,7 @@ namespace DatabaseManager
             }
         }
 
-        private static void AddDigitalInputTag(ServiceReference.DatabaseManagerClient databaseManagerClient)
+        private static void AddDigitalInputTag(DatabaseManagerClient databaseManagerClient)
         {
             Console.WriteLine("-------------------");
             Console.WriteLine("----- ADD DIGITAL INPUT TAG SCREEN -----");
@@ -287,7 +387,7 @@ namespace DatabaseManager
             }
         }
 
-        private static void AddDigitalOutputTag(ServiceReference.DatabaseManagerClient databaseManagerClient)
+        private static void AddDigitalOutputTag(DatabaseManagerClient databaseManagerClient)
         {
             Console.WriteLine("-------------------");
             Console.WriteLine("----- ADD DIGITAL OUTPUT TAG SCREEN -----");
@@ -320,7 +420,7 @@ namespace DatabaseManager
             }
         }
 
-        private static void AddAnalogInputTag(ServiceReference.DatabaseManagerClient databaseManagerClient)
+        private static void AddAnalogInputTag(DatabaseManagerClient databaseManagerClient)
         {
             Console.WriteLine("-------------------");
             Console.WriteLine("----- ADD ANALOG INPUT TAG SCREEN -----");
@@ -363,7 +463,7 @@ namespace DatabaseManager
             }
         }
 
-        private static void AddAnalogOutputTag(ServiceReference.DatabaseManagerClient databaseManagerClient)
+        private static void AddAnalogOutputTag(DatabaseManagerClient databaseManagerClient)
         {
             Console.WriteLine("-------------------");
             Console.WriteLine("----- ADD ANALOG OUTPUT TAG SCREEN -----");
@@ -410,17 +510,20 @@ namespace DatabaseManager
         {
             if (driver != "-1a!")
             {
-                if (driver.ToLower() != "simulation")
+                if (driver.ToLower() != "simulation" && driver.ToLower() != "realtime")
                 {
-                    return "DRIVER MUST BE ONE OF THE NEXT VALUES: Simulation";
+                    return "DRIVER MUST BE ONE OF THE NEXT VALUES: SIMULATION, REALTIME";
                 }
             }
 
             if (ioAddress != "-1a!")
             {
-                if (ioAddress.ToLower() != "s" && ioAddress.ToLower() != "c" && ioAddress.ToLower() != "r")
+                if (driver.ToLower() == "simulation")
                 {
-                    return "I/O ADDRESS MUST BE ONE OF THE NEXT VALUES: S, C, R";
+                    if (ioAddress.ToLower() != "s" && ioAddress.ToLower() != "c" && ioAddress.ToLower() != "r")
+                    {
+                        return "I/O ADDRESS MUST BE ONE OF THE NEXT VALUES: S, C, R";
+                    }
                 }
             }
 

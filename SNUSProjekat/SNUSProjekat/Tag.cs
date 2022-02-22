@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Data.Entity;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Web;
@@ -78,18 +80,20 @@ namespace SNUSProjekat
     [DataContract]
     public class AnalogInput : DigitalInput
     {
+        [DataMember] public List<Alarm> Alarms { get; set; }
         [DataMember] public double LowLimit { get; set; }
         [DataMember] public double HighLimit { get; set; }
         [DataMember] public string Units { get; set; }
 
         public AnalogInput() : base()
         {
-
+            Alarms = new List<Alarm>();
         }
 
         public AnalogInput(string tagName, string description, string ioAdress, string driver,
             int scanTime, bool onOffScan, double lowLimit, double highLimit, string units) : base(tagName, description, ioAdress, driver, scanTime, onOffScan)
         {
+            Alarms = new List<Alarm>();
             LowLimit = lowLimit;
             HighLimit = highLimit;
             Units = units;
@@ -115,5 +119,34 @@ namespace SNUSProjekat
             HighLimit = highLimit;
             Units = units;
         }
+    }
+
+    [DataContract]
+    public class TagValue
+    {
+        [Key]
+        [DataMember] public int Id { get; set; }
+        [DataMember] public string TagName { get; set; }
+        [DataMember] public double Value { get; set; }
+        [DataMember] public string Type { get; set; }
+        [DataMember] public DateTime ValueTime { get; set; }
+
+        public TagValue()
+        {
+
+        }
+
+        public TagValue(string tagName, double value, string type, DateTime valueTime)
+        {
+            TagName = tagName;
+            Value = value;
+            Type = type;
+            ValueTime = valueTime;
+        }
+    }
+
+    public class TagValueContext : DbContext
+    {
+        public DbSet<TagValue> TagValues { get; set; }
     }
 }

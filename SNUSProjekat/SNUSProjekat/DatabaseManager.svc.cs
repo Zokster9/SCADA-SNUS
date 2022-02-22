@@ -161,5 +161,15 @@ namespace SNUSProjekat
         {
             TagProcessing.LoadTags();
         }
+
+        public bool AddAlarm(string tagName, string type, int priority, double limit)
+        {
+            return TagProcessing.AddAlarm(tagName, type, priority, limit);
+        }
+
+        public bool RemoveAlarm(string tagName, string type, int priority, double limit)
+        {
+            return TagProcessing.RemoveAlarm(tagName, type, priority, limit);
+        }
     }
 }

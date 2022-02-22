@@ -78,6 +78,18 @@
   <wsdl:message name="IDatabaseManager_RemoveTag_OutputMessage">
     <wsdl:part name="parameters" element="tns:RemoveTagResponse" />
   </wsdl:message>
+  <wsdl:message name="IDatabaseManager_AddAlarm_InputMessage">
+    <wsdl:part name="parameters" element="tns:AddAlarm" />
+  </wsdl:message>
+  <wsdl:message name="IDatabaseManager_AddAlarm_OutputMessage">
+    <wsdl:part name="parameters" element="tns:AddAlarmResponse" />
+  </wsdl:message>
+  <wsdl:message name="IDatabaseManager_RemoveAlarm_InputMessage">
+    <wsdl:part name="parameters" element="tns:RemoveAlarm" />
+  </wsdl:message>
+  <wsdl:message name="IDatabaseManager_RemoveAlarm_OutputMessage">
+    <wsdl:part name="parameters" element="tns:RemoveAlarmResponse" />
+  </wsdl:message>
   <wsdl:portType name="IAuthentication">
     <wsdl:operation name="Registration">
       <wsdl:input wsaw:Action="http://tempuri.org/IAuthentication/Registration" message="tns:IAuthentication_Registration_InputMessage" />
@@ -128,6 +140,14 @@
     <wsdl:operation name="RemoveTag">
       <wsdl:input wsaw:Action="http://tempuri.org/IDatabaseManager/RemoveTag" message="tns:IDatabaseManager_RemoveTag_InputMessage" />
       <wsdl:output wsaw:Action="http://tempuri.org/IDatabaseManager/RemoveTagResponse" message="tns:IDatabaseManager_RemoveTag_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="AddAlarm">
+      <wsdl:input wsaw:Action="http://tempuri.org/IDatabaseManager/AddAlarm" message="tns:IDatabaseManager_AddAlarm_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IDatabaseManager/AddAlarmResponse" message="tns:IDatabaseManager_AddAlarm_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="RemoveAlarm">
+      <wsdl:input wsaw:Action="http://tempuri.org/IDatabaseManager/RemoveAlarm" message="tns:IDatabaseManager_RemoveAlarm_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IDatabaseManager/RemoveAlarmResponse" message="tns:IDatabaseManager_RemoveAlarm_OutputMessage" />
     </wsdl:operation>
   </wsdl:portType>
   <wsdl:binding name="BasicHttpBinding_IAuthentication" type="tns:IAuthentication">
@@ -236,6 +256,24 @@
     </wsdl:operation>
     <wsdl:operation name="RemoveTag">
       <soap:operation soapAction="http://tempuri.org/IDatabaseManager/RemoveTag" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AddAlarm">
+      <soap:operation soapAction="http://tempuri.org/IDatabaseManager/AddAlarm" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="RemoveAlarm">
+      <soap:operation soapAction="http://tempuri.org/IDatabaseManager/RemoveAlarm" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>
