@@ -249,11 +249,10 @@ namespace SNUSProjekat
                                 break;
                             }
                         }
+                        return true;
                     }
-                    return true;
                 }
             }
-
             return false;
         }
         internal static bool AddDigitalOutputTag(string tagName, string description, string ioAddress, 

@@ -424,13 +424,11 @@ namespace DatabaseManager
             string tagName = Console.ReadLine();
             Console.Write("Description: ");
             string description = Console.ReadLine();
-            Console.Write("Driver: ");
-            string driver = Console.ReadLine();
             Console.Write("I/O address: ");
             string ioAddress = Console.ReadLine();
             Console.Write("Initial value: ");
             string initialValue = Console.ReadLine();
-            string check = CheckParameters(driver, ioAddress, initialValue: initialValue);
+            string check = CheckParameters(ioAddress : ioAddress, initialValue: initialValue);
             if (check == "")
             {
                 if (databaseManagerClient.AddDigitalOutputTag(tagName, description, ioAddress, 
@@ -500,8 +498,6 @@ namespace DatabaseManager
             string tagName = Console.ReadLine();
             Console.Write("Description: ");
             string description = Console.ReadLine();
-            Console.Write("Driver: ");
-            string driver = Console.ReadLine();
             Console.Write("I/O address: ");
             string ioAddress = Console.ReadLine();
             Console.Write("Initial value: ");
@@ -512,7 +508,7 @@ namespace DatabaseManager
             string highLimit = Console.ReadLine();
             Console.Write("Units: ");
             string units = Console.ReadLine();
-            string check = CheckParameters(driver, ioAddress, initialValue: initialValue,
+            string check = CheckParameters(ioAddress : ioAddress, initialValue: initialValue,
                 lowLimit: lowLimit, highLimit: highLimit, units: units);
             if (check == "")
             {
