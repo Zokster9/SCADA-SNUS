@@ -1,0 +1,1 @@
+﻿<%@ ServiceHost Language="C#" Debug="true" Service="SNUSProjekat.ReportManagerService" CodeBehind="ReportManagerService.svc.cs" %>

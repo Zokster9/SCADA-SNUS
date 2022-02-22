@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:wsap="http://schemas.xmlsoap.org/ws/2004/08/addressing/policy" xmlns:wsa10="http://www.w3.org/2005/08/addressing" xmlns:tns="http://tempuri.org/" xmlns:msc="http://schemas.microsoft.com/ws/2005/12/wsdl/contract" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:wsx="http://schemas.xmlsoap.org/ws/2004/09/mex" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata" xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="ReportManagerService" targetNamespace="http://tempuri.org/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <xsd:schema targetNamespace="http://tempuri.org/Imports">
+      <xsd:import schemaLocation="http://localhost:58413/ReportManagerService.svc?xsd=xsd0" namespace="http://tempuri.org/" />
+      <xsd:import schemaLocation="http://localhost:58413/ReportManagerService.svc?xsd=xsd1" namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
+      <xsd:import schemaLocation="http://localhost:58413/ReportManagerService.svc?xsd=xsd2" namespace="http://schemas.datacontract.org/2004/07/SNUSProjekat" />
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="IReportManagerService_GetAllTriggeredAlarmsByTime_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetAllTriggeredAlarmsByTime" />
+  </wsdl:message>
+  <wsdl:message name="IReportManagerService_GetAllTriggeredAlarmsByTime_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetAllTriggeredAlarmsByTimeResponse" />
+  </wsdl:message>
+  <wsdl:message name="IReportManagerService_GetAllTriggeredAlarmsByPriority_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetAllTriggeredAlarmsByPriority" />
+  </wsdl:message>
+  <wsdl:message name="IReportManagerService_GetAllTriggeredAlarmsByPriority_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetAllTriggeredAlarmsByPriorityResponse" />
+  </wsdl:message>
+  <wsdl:message name="IReportManagerService_GetAllTagValuesByTime_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetAllTagValuesByTime" />
+  </wsdl:message>
+  <wsdl:message name="IReportManagerService_GetAllTagValuesByTime_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetAllTagValuesByTimeResponse" />
+  </wsdl:message>
+  <wsdl:message name="IReportManagerService_GetLastAnalogInputTagValue_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetLastAnalogInputTagValue" />
+  </wsdl:message>
+  <wsdl:message name="IReportManagerService_GetLastAnalogInputTagValue_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetLastAnalogInputTagValueResponse" />
+  </wsdl:message>
+  <wsdl:message name="IReportManagerService_GetLastDigitalInputTagValue_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetLastDigitalInputTagValue" />
+  </wsdl:message>
+  <wsdl:message name="IReportManagerService_GetLastDigitalInputTagValue_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetLastDigitalInputTagValueResponse" />
+  </wsdl:message>
+  <wsdl:message name="IReportManagerService_GetAllTagValues_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetAllTagValues" />
+  </wsdl:message>
+  <wsdl:message name="IReportManagerService_GetAllTagValues_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetAllTagValuesResponse" />
+  </wsdl:message>
+  <wsdl:portType name="IReportManagerService">
+    <wsdl:operation name="GetAllTriggeredAlarmsByTime">
+      <wsdl:input wsaw:Action="http://tempuri.org/IReportManagerService/GetAllTriggeredAlarmsByTime" message="tns:IReportManagerService_GetAllTriggeredAlarmsByTime_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IReportManagerService/GetAllTriggeredAlarmsByTimeResponse" message="tns:IReportManagerService_GetAllTriggeredAlarmsByTime_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetAllTriggeredAlarmsByPriority">
+      <wsdl:input wsaw:Action="http://tempuri.org/IReportManagerService/GetAllTriggeredAlarmsByPriority" message="tns:IReportManagerService_GetAllTriggeredAlarmsByPriority_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IReportManagerService/GetAllTriggeredAlarmsByPriorityResponse" message="tns:IReportManagerService_GetAllTriggeredAlarmsByPriority_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetAllTagValuesByTime">
+      <wsdl:input wsaw:Action="http://tempuri.org/IReportManagerService/GetAllTagValuesByTime" message="tns:IReportManagerService_GetAllTagValuesByTime_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IReportManagerService/GetAllTagValuesByTimeResponse" message="tns:IReportManagerService_GetAllTagValuesByTime_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetLastAnalogInputTagValue">
+      <wsdl:input wsaw:Action="http://tempuri.org/IReportManagerService/GetLastAnalogInputTagValue" message="tns:IReportManagerService_GetLastAnalogInputTagValue_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IReportManagerService/GetLastAnalogInputTagValueResponse" message="tns:IReportManagerService_GetLastAnalogInputTagValue_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetLastDigitalInputTagValue">
+      <wsdl:input wsaw:Action="http://tempuri.org/IReportManagerService/GetLastDigitalInputTagValue" message="tns:IReportManagerService_GetLastDigitalInputTagValue_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IReportManagerService/GetLastDigitalInputTagValueResponse" message="tns:IReportManagerService_GetLastDigitalInputTagValue_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetAllTagValues">
+      <wsdl:input wsaw:Action="http://tempuri.org/IReportManagerService/GetAllTagValues" message="tns:IReportManagerService_GetAllTagValues_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IReportManagerService/GetAllTagValuesResponse" message="tns:IReportManagerService_GetAllTagValues_OutputMessage" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="BasicHttpBinding_IReportManagerService" type="tns:IReportManagerService">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="GetAllTriggeredAlarmsByTime">
+      <soap:operation soapAction="http://tempuri.org/IReportManagerService/GetAllTriggeredAlarmsByTime" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetAllTriggeredAlarmsByPriority">
+      <soap:operation soapAction="http://tempuri.org/IReportManagerService/GetAllTriggeredAlarmsByPriority" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetAllTagValuesByTime">
+      <soap:operation soapAction="http://tempuri.org/IReportManagerService/GetAllTagValuesByTime" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetLastAnalogInputTagValue">
+      <soap:operation soapAction="http://tempuri.org/IReportManagerService/GetLastAnalogInputTagValue" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetLastDigitalInputTagValue">
+      <soap:operation soapAction="http://tempuri.org/IReportManagerService/GetLastDigitalInputTagValue" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetAllTagValues">
+      <soap:operation soapAction="http://tempuri.org/IReportManagerService/GetAllTagValues" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="ReportManagerService">
+    <wsdl:port name="BasicHttpBinding_IReportManagerService" binding="tns:BasicHttpBinding_IReportManagerService">
+      <soap:address location="http://localhost:58413/ReportManagerService.svc/ReportManager" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

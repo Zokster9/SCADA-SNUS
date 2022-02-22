@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:tns="http://tempuri.org/" elementFormDefault="qualified" targetNamespace="http://tempuri.org/" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import schemaLocation="http://localhost:58413/ReportManagerService.svc?xsd=xsd2" namespace="http://schemas.datacontract.org/2004/07/SNUSProjekat" />
+  <xs:element name="GetAllTriggeredAlarmsByTime">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="lowLimit" type="xs:dateTime" />
+        <xs:element minOccurs="0" name="highLimit" type="xs:dateTime" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetAllTriggeredAlarmsByTimeResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q1="http://schemas.datacontract.org/2004/07/SNUSProjekat" minOccurs="0" name="GetAllTriggeredAlarmsByTimeResult" nillable="true" type="q1:ArrayOfTriggeredAlarm" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetAllTriggeredAlarmsByPriority">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="priority" type="xs:int" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetAllTriggeredAlarmsByPriorityResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q2="http://schemas.datacontract.org/2004/07/SNUSProjekat" minOccurs="0" name="GetAllTriggeredAlarmsByPriorityResult" nillable="true" type="q2:ArrayOfTriggeredAlarm" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetAllTagValuesByTime">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="lowLimit" type="xs:dateTime" />
+        <xs:element minOccurs="0" name="highLimit" type="xs:dateTime" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetAllTagValuesByTimeResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q3="http://schemas.datacontract.org/2004/07/SNUSProjekat" minOccurs="0" name="GetAllTagValuesByTimeResult" nillable="true" type="q3:ArrayOfTagValue" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetLastAnalogInputTagValue">
+    <xs:complexType>
+      <xs:sequence />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetLastAnalogInputTagValueResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q4="http://schemas.datacontract.org/2004/07/SNUSProjekat" minOccurs="0" name="GetLastAnalogInputTagValueResult" nillable="true" type="q4:ArrayOfTagValue" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetLastDigitalInputTagValue">
+    <xs:complexType>
+      <xs:sequence />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetLastDigitalInputTagValueResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q5="http://schemas.datacontract.org/2004/07/SNUSProjekat" minOccurs="0" name="GetLastDigitalInputTagValueResult" nillable="true" type="q5:ArrayOfTagValue" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetAllTagValues">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="tagName" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetAllTagValuesResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q6="http://schemas.datacontract.org/2004/07/SNUSProjekat" minOccurs="0" name="GetAllTagValuesResult" nillable="true" type="q6:ArrayOfTagValue" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>
